@@ -25,6 +25,10 @@ public class BloomFilter {
 
     private Set<Integer> getIndexOfWord(String word){
         Set<Integer> indexes = new HashSet<>();
+        if(word == null) {
+            return indexes;
+        }
+
         for (MessageDigest md: hashFunction) {
             byte[] bts = md.digest(word.getBytes());
             BigInteger i = new BigInteger(bts);
@@ -40,9 +44,18 @@ public class BloomFilter {
     }
 
     public boolean contains(String word){
-        for (int i: getIndexOfWord(word)) {
+        if(word == null) {
+            return false;
+        }
+
+        Set<Integer> indexOfWord = getIndexOfWord(word);
+        if(indexOfWord.isEmpty()) {
+            return false;
+        }
+        for (int i: indexOfWord) {
             if (!bitsArr.get(i)){return false;}
         }
+
         return true;
     }
 
